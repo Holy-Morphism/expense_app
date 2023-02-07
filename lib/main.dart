@@ -1,6 +1,9 @@
+import 'package:expense/widgets/new_transaction.dart';
+import 'package:expense/widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
 
 import './widgets/user_transaction.dart';
+import './models/transaction.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,7 +17,44 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _userTransactions = [
+    Transaction(
+      id: '12345',
+      title: 'chai',
+      amount: 50,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: '12346',
+      title: 'Lays',
+      amount: 60,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: '12347',
+      title: 'Mango Juice',
+      amount: 30,
+      date: DateTime.now(),
+    ),
+  ];
+
+  void _addNewTransaction(String title, double amount) {
+    final transaction = Transaction(
+        id: DateTime.now().toString(),
+        title: title,
+        amount: amount,
+        date: DateTime.now());
+    setState(() {
+      _userTransactions.add(transaction);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,10 +90,23 @@ class MyHomePage extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 50),
               ),
             ),
-            UserTransaction(),
+            TransactionList(_userTransactions),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showDialog(context, _addNewTransaction),
+      ),
     );
   }
+}
+
+void _showDialog(BuildContext context, Function func) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: NewTransaction(func, () => Navigator.pop(context)),
+        );
+      });
 }
