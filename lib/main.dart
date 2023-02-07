@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './models/transaction.dart';
-import './widgets/transaction_list.dart';
-import './widgets/new_transaction.dart';
+import './widgets/user_transaction.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,15 +15,14 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  final List<Transaction> transactions = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Flutter App'),
-        ),
-        body: Column(
+      appBar: AppBar(
+        title: Text('Flutter App'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Card(
@@ -53,7 +50,10 @@ class MyHomePage extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 50),
               ),
             ),
+            UserTransaction(),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
