@@ -26,7 +26,7 @@ class Chart extends StatelessWidget {
         'day': DateFormat.E().format(weekday).substring(0, 1),
         'amount': weekdayAmount,
       };
-    });
+    }).reversed.toList();
   }
 
   double get percentOfMax {
@@ -38,6 +38,7 @@ class Chart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       margin: EdgeInsets.all(10),
       child: Container(
         padding: EdgeInsets.all(10),
