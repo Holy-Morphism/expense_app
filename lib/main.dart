@@ -1,6 +1,7 @@
-import 'package:expense/widgets/chart.dart';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
+import './widgets/chart.dart';
 import './models/transaction.dart';
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
@@ -20,11 +21,12 @@ class MyApp extends StatelessWidget {
           titleLarge: TextStyle(
             color: Colors.white,
             fontFamily: 'SofiaSansCondensed',
-            fontSize: 20,
+            fontSize: 40,
           ),
           bodyLarge: TextStyle(
-            color: Colors.purple,
+            color: Colors.black,
             fontFamily: 'SofiaSansCondensed',
+            fontSize: 20,
           ),
         ),
       ),
@@ -39,26 +41,25 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [
-    // Transaction(
-    //   id: '12345',
-    //   title: 'chai',
-    //   amount: 50,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: '12346',
-    //   title: 'Lays',
-    //   amount: 60,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: '12347',
-    //   title: 'Mango Juice',
-    //   amount: 30,
-    //   date: DateTime.now(),
-    // ),
+    Transaction(
+      id: '12345',
+      title: 'chai',
+      amount: 50,
+      date: DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Transaction(
+      id: '12346',
+      title: 'Lays',
+      amount: 100,
+      date: DateTime.now().subtract(Duration(days: 2)),
+    ),
+    Transaction(
+      id: '12347',
+      title: 'Mango Juice',
+      amount: 550,
+      date: DateTime.now().subtract(Duration(days: 3)),
+    ),
   ];
-
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((transaction) {
       return transaction.date.isAfter(
@@ -91,11 +92,17 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  void _playAudio() async {
+    AudioCache audioCache = AudioCache();
+    await audioCache.load('audio/voice.mp3');
+    await audioCache.play('audio/voice.mp3');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
+        centerTitle: false,
         title: Text(
           'Personal Expenses',
         ),
@@ -117,7 +124,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => _startAddNewTransaction(context),
+        onPressed: () {
+          _playAudio();
+          _startAddNewTransaction(context);
+        },
       ),
     );
   }
