@@ -37,42 +37,37 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.2,
-      child: Stack(
-        children: <Widget>[
-          Card(
-            elevation: 5,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            margin: EdgeInsets.all(10),
-            child: Container(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/tanjiro.jpeg'),
-                      fit: BoxFit.cover),
-                  borderRadius: BorderRadius.circular(20)),
-              padding: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  ...groupedTransactions.map(
-                    (data) {
-                      return Flexible(
-                        fit: FlexFit.tight,
-                        child: ChartBar(
-                            data['day'],
-                            data['amount'],
-                            percentOfMax == 0
-                                ? 0.0
-                                : (data['amount'] as double) / percentOfMax),
-                      );
-                    },
-                  )
-                ],
-              ),
-            ),
+      //height: MediaQuery.of(context).size.height * 0.2,
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        margin: EdgeInsets.all(10),
+        child: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/tanjiro.png'),
+                  fit: BoxFit.cover),
+              borderRadius: BorderRadius.circular(20)),
+          padding: EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              ...groupedTransactions.map(
+                (data) {
+                  return Flexible(
+                    fit: FlexFit.tight,
+                    child: ChartBar(
+                        data['day'],
+                        data['amount'],
+                        percentOfMax == 0
+                            ? 0.0
+                            : (data['amount'] as double) / percentOfMax),
+                  );
+                },
+              )
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
