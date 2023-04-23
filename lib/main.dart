@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'Personal Expenses',
       home: MyHomePage(),
       theme: ThemeData(
-        primaryColor: Colors.black,
+        primaryColor: Colors.blue,
         colorScheme: ColorScheme.fromSwatch().copyWith(error: Colors.red),
         textTheme: const TextTheme(
           titleLarge: TextStyle(
@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final _ortten = MediaQuery.of(context).orientation;
+    final _isLandScape = MediaQuery.of(context).orientation;
     final appbar = AppBar(
       elevation: 5,
       // backgroundColor: Colors.black,
@@ -119,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (_ortten == Orientation.landscape)
+            if (_isLandScape == Orientation.landscape)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -133,21 +133,37 @@ class _MyHomePageState extends State<MyHomePage> {
                       })
                 ],
               ),
-            _showchart
-                ? Container(
-                    height: (MediaQuery.of(context).size.height -
-                            appbar.preferredSize.height -
-                            MediaQuery.of(context).padding.top) *
-                        0.4,
-                    child: Chart(_recentTransactions))
-                : Container(
-                    height: (MediaQuery.of(context).size.height -
-                            appbar.preferredSize.height -
-                            MediaQuery.of(context).padding.top) *
-                        0.6,
-                    child:
-                        TransactionList(_userTransactions, _deleteTransaction),
-                  ),
+            if (_isLandScape == Orientation.landscape)
+              _showchart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appbar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.8,
+                      child: Chart(_recentTransactions))
+                  : Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appbar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.8,
+                      child: TransactionList(
+                          _userTransactions, _deleteTransaction),
+                    ),
+            if (_isLandScape != Orientation.landscape)
+              Container(
+                  height: (MediaQuery.of(context).size.height -
+                          appbar.preferredSize.height -
+                          MediaQuery.of(context).padding.top) *
+                      0.3,
+                  child: Chart(_recentTransactions)),
+            if (_isLandScape != Orientation.landscape)
+              Container(
+                height: (MediaQuery.of(context).size.height -
+                        appbar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.7,
+                child: TransactionList(_userTransactions, _deleteTransaction),
+              )
           ],
         ),
       ),

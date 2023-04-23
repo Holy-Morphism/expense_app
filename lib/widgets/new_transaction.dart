@@ -49,60 +49,62 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      margin: EdgeInsets.all(10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(labelText: 'Title'),
-              controller: titleController,
-              onSubmitted: (_) => _submitData,
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Amount'),
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              onSubmitted: (_) => _submitData,
-            ),
-            Row(
-              children: <Widget>[
-                Text(
-                  _selectededate == null
-                      ? 'No date chosen!'
-                      : 'Picked Date : ${DateFormat.yMd().format(_selectededate)}',
-                  style: TextStyle(),
-                ),
-                TextButton(
-                  onPressed: _presentDatePicker,
-                  child: Text(
-                    'Chose Date',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColorDark,
+    return SingleChildScrollView(
+      child: Card(
+        margin: EdgeInsets.all(10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+              10, 10, 10, MediaQuery.of(context).viewInsets.bottom + 20),
+          margin: EdgeInsets.all(10),
+          child: Column(
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(labelText: 'Title'),
+                controller: titleController,
+                onSubmitted: (_) => _submitData,
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Amount'),
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                onSubmitted: (_) => _submitData,
+              ),
+              Row(
+                children: <Widget>[
+                  Text(
+                    _selectededate == null
+                        ? 'No date chosen!'
+                        : 'Picked Date : ${DateFormat.yMd().format(_selectededate)}',
+                    style: TextStyle(),
+                  ),
+                  TextButton(
+                    onPressed: _presentDatePicker,
+                    child: Text(
+                      'Chose Date',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColorDark,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Container(
-              alignment: Alignment.bottomRight,
-              child: ElevatedButton(
-                onPressed: _submitData,
-                child: Text("SAVE"),
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).primaryColorDark),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
-                    elevation: MaterialStateProperty.all(5)),
+                ],
               ),
-            )
-          ],
+              Container(
+                alignment: Alignment.bottomRight,
+                child: ElevatedButton(
+                  onPressed: _submitData,
+                  child: Text("SAVE"),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).primaryColorDark),
+                      foregroundColor: MaterialStateProperty.all(Colors.white),
+                      elevation: MaterialStateProperty.all(5)),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
