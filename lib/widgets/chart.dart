@@ -1,3 +1,4 @@
+//import './background_video.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
@@ -36,18 +37,26 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      //height: MediaQuery.of(context).size.height * 0.2,
-      child: Card(
+    return Stack(children: [
+      // Positioned.fill(
+      //   child: Container(
+      //     clipBehavior: Clip.hardEdge,
+      //     margin: EdgeInsets.all(10),
+      //     decoration: BoxDecoration(
+      //       borderRadius: BorderRadius.circular(20),
+      //     ),
+      //     child: Myvideo(),
+      //   ),
+      // ),
+      Card(
+        color: Colors.transparent,
         elevation: 5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         margin: EdgeInsets.all(10),
         child: Container(
           decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/tanjiro.png'),
-                  fit: BoxFit.cover),
-              borderRadius: BorderRadius.circular(20)),
+            color: Colors.transparent,
+          ),
           padding: EdgeInsets.all(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -69,6 +78,6 @@ class Chart extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ]);
   }
 }
