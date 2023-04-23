@@ -97,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final _ortten = MediaQuery.of(context).orientation;
     final appbar = AppBar(
       elevation: 5,
       // backgroundColor: Colors.black,
@@ -118,19 +119,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Show Chart'),
-                Switch(
-                    value: _showchart,
-                    onChanged: (val) {
-                      setState(() {
-                        _showchart = val;
-                      });
-                    })
-              ],
-            ),
+            if (_ortten == Orientation.landscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Show Chart'),
+                  Switch(
+                      value: _showchart,
+                      onChanged: (val) {
+                        setState(() {
+                          _showchart = val;
+                        });
+                      })
+                ],
+              ),
             _showchart
                 ? Container(
                     height: (MediaQuery.of(context).size.height -

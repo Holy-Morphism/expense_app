@@ -10,7 +10,15 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _userTransactions.isEmpty
-        ? Container(child: Image.asset('assets/images/lovehashira.png'))
+        ? LayoutBuilder(builder: (context, constraits) {
+            return Container(
+              height: constraits.maxHeight,
+              child: Image.asset(
+                'assets/images/lovehashira.png',
+                fit: BoxFit.contain,
+              ),
+            );
+          })
         : Container(
             height: MediaQuery.of(context).size.height * 0.75,
             child: ListView.builder(
