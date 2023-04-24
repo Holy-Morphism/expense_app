@@ -97,7 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final _isLandScape = MediaQuery.of(context).orientation;
+    final mediaQuery = MediaQuery.of(context);
+    final _isLandScape = mediaQuery.orientation;
     final appbar = AppBar(
       elevation: 5,
       // backgroundColor: Colors.black,
@@ -124,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Show Chart'),
-                  Switch(
+                  Switch.adaptive(
                       value: _showchart,
                       onChanged: (val) {
                         setState(() {
@@ -136,31 +137,31 @@ class _MyHomePageState extends State<MyHomePage> {
             if (_isLandScape == Orientation.landscape)
               _showchart
                   ? Container(
-                      height: (MediaQuery.of(context).size.height -
+                      height: (mediaQuery.size.height -
                               appbar.preferredSize.height -
-                              MediaQuery.of(context).padding.top) *
+                              mediaQuery.padding.top) *
                           0.8,
                       child: Chart(_recentTransactions))
                   : Container(
-                      height: (MediaQuery.of(context).size.height -
+                      height: (mediaQuery.size.height -
                               appbar.preferredSize.height -
-                              MediaQuery.of(context).padding.top) *
+                              mediaQuery.padding.top) *
                           0.8,
                       child: TransactionList(
                           _userTransactions, _deleteTransaction),
                     ),
             if (_isLandScape != Orientation.landscape)
               Container(
-                  height: (MediaQuery.of(context).size.height -
+                  height: (mediaQuery.size.height -
                           appbar.preferredSize.height -
-                          MediaQuery.of(context).padding.top) *
+                          mediaQuery.padding.top) *
                       0.3,
                   child: Chart(_recentTransactions)),
             if (_isLandScape != Orientation.landscape)
               Container(
-                height: (MediaQuery.of(context).size.height -
+                height: (mediaQuery.size.height -
                         appbar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
+                        mediaQuery.padding.top) *
                     0.7,
                 child: TransactionList(_userTransactions, _deleteTransaction),
               )
