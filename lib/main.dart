@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 //import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
 
 import './widgets/chart.dart';
 import './models/transaction.dart';
@@ -99,82 +102,105 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final _isLandScape = mediaQuery.orientation;
-    final appbar = AppBar(
-      elevation: 5,
-      // backgroundColor: Colors.black,
-      //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-      centerTitle: true,
-      title: Text(
-        'Personal Expenses',
-      ),
-      actions: <Widget>[
-        IconButton(
-          onPressed: () => _startAddNewTransaction(context),
-          icon: Icon(Icons.add),
-        ),
-      ],
-    );
-    return Scaffold(
-      appBar: appbar,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            if (_isLandScape == Orientation.landscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Show Chart'),
-                  Switch.adaptive(
-                      value: _showchart,
-                      onChanged: (val) {
-                        setState(() {
-                          _showchart = val;
-                        });
-                      })
-                ],
+    final PreferredSizeWidget appbar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text(
+              'Personal Expenses',
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  child: Icon(CupertinoIcons.add),
+                  onTap: () => _startAddNewTransaction(context),
+                )
+              ],
+            ),
+          )
+        : AppBar(
+            elevation: 5,
+            // backgroundColor: Colors.black,
+            //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+            centerTitle: true,
+            title: Text(
+              'Personal Expenses',
+            ),
+            actions: <Widget>[
+              IconButton(
+                onPressed: () => _startAddNewTransaction(context),
+                icon: Icon(Icons.add),
               ),
-            if (_isLandScape == Orientation.landscape)
-              _showchart
-                  ? Container(
-                      height: (mediaQuery.size.height -
-                              appbar.preferredSize.height -
-                              mediaQuery.padding.top) *
-                          0.8,
-                      child: Chart(_recentTransactions))
-                  : Container(
-                      height: (mediaQuery.size.height -
-                              appbar.preferredSize.height -
-                              mediaQuery.padding.top) *
-                          0.8,
-                      child: TransactionList(
-                          _userTransactions, _deleteTransaction),
-                    ),
-            if (_isLandScape != Orientation.landscape)
-              Container(
-                  height: (mediaQuery.size.height -
-                          appbar.preferredSize.height -
-                          mediaQuery.padding.top) *
-                      0.3,
-                  child: Chart(_recentTransactions)),
-            if (_isLandScape != Orientation.landscape)
-              Container(
+            ],
+          );
+    final _pageBody = SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          if (_isLandScape == Orientation.landscape)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Show Chart'),
+                Switch.adaptive(
+                    value: _showchart,
+                    onChanged: (val) {
+                      setState(() {
+                        _showchart = val;
+                      });
+                    })
+              ],
+            ),
+          if (_isLandScape == Orientation.landscape)
+            _showchart
+                ? Container(
+                    height: (mediaQuery.size.height -
+                            appbar.preferredSize.height -
+                            mediaQuery.padding.top) *
+                        0.8,
+                    child: Chart(_recentTransactions))
+                : Container(
+                    height: (mediaQuery.size.height -
+                            appbar.preferredSize.height -
+                            mediaQuery.padding.top) *
+                        0.8,
+                    child:
+                        TransactionList(_userTransactions, _deleteTransaction),
+                  ),
+          if (_isLandScape != Orientation.landscape)
+            Container(
                 height: (mediaQuery.size.height -
                         appbar.preferredSize.height -
                         mediaQuery.padding.top) *
-                    0.7,
-                child: TransactionList(_userTransactions, _deleteTransaction),
-              )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          _playAudio();
-          _startAddNewTransaction(context);
-        },
+                    0.3,
+                child: Chart(_recentTransactions)),
+          if (_isLandScape != Orientation.landscape)
+            Container(
+              height: (mediaQuery.size.height -
+                      appbar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7,
+              child: TransactionList(_userTransactions, _deleteTransaction),
+            )
+        ],
       ),
     );
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: _pageBody,
+            navigationBar: appbar,
+          )
+        : Scaffold(
+            appBar: appbar,
+            body: _pageBody,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    child: Icon(Icons.add),
+                    onPressed: () {
+                      _playAudio();
+                      _startAddNewTransaction(context);
+                    },
+                  ),
+          );
   }
 }
