@@ -21,15 +21,25 @@ class TransactionList extends StatelessWidget {
           })
         : Container(
             height: MediaQuery.of(context).size.height * 0.75,
-            child: ListView.builder(
-              itemBuilder: (ctx, index) {
-                return TransactionItem(
-                    key: key,
-                    userTransactions: _userTransactions[index],
-                    deletTx: _deletTx);
-              },
-              itemCount: _userTransactions.length,
+            child: ListView(
+              children: _userTransactions
+                  .map((tx) => TransactionItem(
+                      key: ValueKey(tx.id),
+                      userTransactions: tx,
+                      deletTx: _deletTx))
+                  .toList(),
             ),
+            // child: ListView.custom(
+            //   childrenDelegate: SliverChildBuilderDelegate(
+            //     (context, index) {
+            //       return TransactionItem(
+            //           key: ValueKey(_userTransactions[index].id),
+            //           userTransactions: _userTransactions[index],
+            //           deletTx: _deletTx);
+            //     },
+            //     childCount: _userTransactions.length,
+            //   ),
+            // ),
           );
   }
 }
