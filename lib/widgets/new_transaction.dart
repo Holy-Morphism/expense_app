@@ -13,7 +13,7 @@ class NewTransaction extends StatefulWidget {
 class _NewTransactionState extends State<NewTransaction> {
   final titleController = TextEditingController();
   final amountController = TextEditingController();
-  DateTime _selectededate;
+  DateTime? _selectededate;
 
   void _submitData() {
     if (amountController.text.isEmpty) {
@@ -41,7 +41,7 @@ class _NewTransactionState extends State<NewTransaction> {
         return;
       } else {
         setState(() {
-          _selectededate = pickeddate;
+          _selectededate = pickeddate as DateTime;
         });
       }
     });
@@ -77,7 +77,7 @@ class _NewTransactionState extends State<NewTransaction> {
                   Text(
                     _selectededate == null
                         ? 'No date chosen!'
-                        : 'Picked Date : ${DateFormat.yMd().format(_selectededate)}',
+                        : 'Picked Date : ${DateFormat.yMd().format(_selectededate as DateTime)}',
                     style: TextStyle(),
                   ),
                   TextButton(

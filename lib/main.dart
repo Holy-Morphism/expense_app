@@ -98,11 +98,56 @@ class _MyHomePageState extends State<MyHomePage> {
     await audioCache.play('audio/voice.mp3');
   }
 
+  Widget _buildLandScape() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Show Chart'),
+        Switch.adaptive(
+            value: _showchart,
+            onChanged: (val) {
+              setState(() {
+                _showchart = val;
+              });
+            })
+      ],
+    );
+  }
+
+  Widget _buildChart(
+      MediaQueryData mediaQuery, PreferredSizeWidget appbar, double size) {
+    return Container(
+        height: (mediaQuery.size.height -
+                appbar.preferredSize.height -
+                mediaQuery.padding.top) *
+            size,
+        child: Chart(_recentTransactions));
+  }
+
+  Widget _buildTransactionList(
+      MediaQueryData mediaQuery, PreferredSizeWidget appbar, double size) {
+    return Container(
+      height: (mediaQuery.size.height -
+              appbar.preferredSize.height -
+              mediaQuery.padding.top) *
+          0.8,
+      child: TransactionList(_userTransactions, _deleteTransaction),
+    );
+  }
+
+  List<Widget> _buildPotrait(
+      MediaQueryData mediaQuery, PreferredSizeWidget appbar) {
+    return [
+      _buildChart(mediaQuery, appbar, 0.3),
+      _buildTransactionList(mediaQuery, appbar, 0.7),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final _isLandScape = mediaQuery.orientation;
-    final PreferredSizeWidget appbar = Platform.isIOS
+    final PreferredSizeWidget appbar = (Platform.isIOS
         ? CupertinoNavigationBar(
             middle: Text(
               'Personal Expenses',
@@ -131,63 +176,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 icon: Icon(Icons.add),
               ),
             ],
-          );
+          )) as PreferredSizeWidget;
     final _pageBody = SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          if (_isLandScape == Orientation.landscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Show Chart'),
-                Switch.adaptive(
-                    value: _showchart,
-                    onChanged: (val) {
-                      setState(() {
-                        _showchart = val;
-                      });
-                    })
-              ],
-            ),
+          if (_isLandScape == Orientation.landscape) _buildLandScape(),
           if (_isLandScape == Orientation.landscape)
             _showchart
-                ? Container(
-                    height: (mediaQuery.size.height -
-                            appbar.preferredSize.height -
-                            mediaQuery.padding.top) *
-                        0.8,
-                    child: Chart(_recentTransactions))
-                : Container(
-                    height: (mediaQuery.size.height -
-                            appbar.preferredSize.height -
-                            mediaQuery.padding.top) *
-                        0.8,
-                    child:
-                        TransactionList(_userTransactions, _deleteTransaction),
-                  ),
+                ? _buildChart(mediaQuery, appbar, 0.8)
+                : _buildTransactionList(mediaQuery, appbar, 0.8),
           if (_isLandScape != Orientation.landscape)
-            Container(
-                height: (mediaQuery.size.height -
-                        appbar.preferredSize.height -
-                        mediaQuery.padding.top) *
-                    0.3,
-                child: Chart(_recentTransactions)),
-          if (_isLandScape != Orientation.landscape)
-            Container(
-              height: (mediaQuery.size.height -
-                      appbar.preferredSize.height -
-                      mediaQuery.padding.top) *
-                  0.7,
-              child: TransactionList(_userTransactions, _deleteTransaction),
-            )
+            ..._buildPotrait(mediaQuery, appbar)
         ],
       ),
     );
     return Platform.isIOS
         ? CupertinoPageScaffold(
             child: _pageBody,
-            navigationBar: appbar,
+            navigationBar: appbar as ObstructingPreferredSizeWidget,
           )
         : Scaffold(
             appBar: appbar,

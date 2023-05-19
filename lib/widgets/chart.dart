@@ -32,7 +32,9 @@ class Chart extends StatelessWidget {
 
   double get percentOfMax {
     return groupedTransactions.fold(
-        0.0, (previousValue, element) => previousValue += element['amount']);
+        0.0,
+        (previousValue, element) =>
+            previousValue += element['amount'] as double);
   }
 
   @override
@@ -66,8 +68,8 @@ class Chart extends StatelessWidget {
                   return Flexible(
                     fit: FlexFit.tight,
                     child: ChartBar(
-                        data['day'],
-                        data['amount'],
+                        data['day'] as String,
+                        data['amount'] as double,
                         percentOfMax == 0
                             ? 0.0
                             : (data['amount'] as double) / percentOfMax),
