@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:expense/Database/sql_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-//import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 
 import './widgets/chart.dart';
@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Personal Expenses',
       home: MyHomePage(),
       theme: ThemeData(
@@ -51,8 +52,33 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _userTransactions = [];
+  List<Transaction> _userTransactions = [];
+  List<Map<String, dynamic>> tranclist = [];
+
   bool _showchart = false;
+
+  void _refreshTList() async {
+    final data = await SQLHelper.getTransactions();
+    setState(() {
+      tranclist = data;
+    });
+    if (tranclist.isNotEmpty)
+      _userTransactions = tranclist.map((e) {
+        return Transaction(
+            id: e['id'],
+            title: e['title'],
+            amount: e['amount'],
+            date: DateTime.fromMillisecondsSinceEpoch(e['date']));
+      }).toList();
+    print('retreived data ${tranclist.length}');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshTList();
+    print('refresh no of items ${tranclist.length}');
+  }
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((transaction) {
@@ -66,13 +92,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _deleteTransaction(String id) {
+  void _deleteTransaction(String id) async {
     setState(() {
       _userTransactions.removeWhere((element) => element.id == id);
     });
+    await SQLHelper.deleteTransaction(id);
   }
 
-  void _addNewTransaction(String title, double amount, DateTime newdate) {
+  void _addNewTransaction(String title, double amount, DateTime newdate) async {
     final transaction = Transaction(
         id: DateTime.now().toString(),
         title: title,
@@ -81,6 +108,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _userTransactions.add(transaction);
     });
+    await SQLHelper.AddTransaction(transaction.id, transaction.title,
+        transaction.amount, newdate.millisecondsSinceEpoch);
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
