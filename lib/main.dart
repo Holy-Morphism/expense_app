@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:expense/Database/sql_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+//import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 
 import './widgets/chart.dart';
@@ -53,40 +55,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Transaction> _userTransactions = [];
-  List<Map<String, dynamic>> tranclist = [];
-  final List<Color> colors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-  ];
+  final List<Transaction> _userTransactions = [];
   bool _showchart = false;
-
-  void _refreshTList() async {
-    final data = await SQLHelper.getTransactions();
-    setState(() {
-      tranclist = data;
-    });
-    if (tranclist.isNotEmpty)
-      _userTransactions = tranclist.map((e) {
-        return Transaction(
-          id: e['id'],
-          title: e['title'],
-          amount: e['amount'],
-          date: DateTime.fromMillisecondsSinceEpoch(e['date']),
-          color: Color(e['color']),
-        );
-      }).toList();
-    print('retreived data ${tranclist.length}');
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _refreshTList();
-    print('refresh no of items ${tranclist.length}');
-  }
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((transaction) {
@@ -117,12 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _userTransactions.add(transaction);
     });
-    await SQLHelper.AddTransaction(
-        transaction.id,
-        transaction.title,
-        transaction.amount,
-        newdate.millisecondsSinceEpoch,
-        transaction.color.value);
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
